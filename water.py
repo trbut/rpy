@@ -7,14 +7,31 @@ channel = 21
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(channel, GPIO.IN)
  
-def callback(channel):
-        if GPIO.input(channel):
-                print "No Water Detected!"
-        else:
-                print "Water Detected!"
+def callback_rising(channel):
  
-GPIO.add_event_detect(channel, GPIO.BOTH, bouncetime=300)  # let us know when the pin goes HIGH or LOW
-GPIO.add_event_callback(channel, callback)  # assign function to GPIO PIN, Run function on change
+#    import pdb;pdb.set_trace()
+    print '-----------------------------'
+    print 'rising --- %s channel --- ' % channel,
+    response = GPIO.input(channel)
+    if response:
+        print "No water detected!"
+    else:
+        print "Water detected!"
+    print '-----------------------------'
+
+def callback_falling(channel):
+ 
+    print '-----------------------------'
+    print 'falling --- %s channel --- ' % channel,
+    if GPIO.input(channel):
+        print "input detected!"
+    else:
+        print "no input detected!"
+    print '-----------------------------'
+
+#GPIO.add_event_detect(channel, GPIO.FALLING, bouncetime=300)  # let us know when the pin goes HIGH or LOW
+GPIO.add_event_detect(channel, GPIO.RISING, bouncetime=300)  # let us know when the pin goes HIGH or LOW
+GPIO.add_event_callback(channel, callback_rising)  # assign function to GPIO PIN, Run function on change
  
 # infinite loop
 while True:
